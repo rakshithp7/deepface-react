@@ -6,6 +6,9 @@
 .pnp.js
 .cache
 dist
+.env
+.eslintrc.json
+.prettierrc
 
 # testing
 /coverage

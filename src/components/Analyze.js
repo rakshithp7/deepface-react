@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import SongSuggestion from "./SongSuggestion";
 import axios from "axios";
 
 class Analyze extends Component {
@@ -99,20 +100,11 @@ class Analyze extends Component {
           emotion: res.data["instance_1"]["dominant_emotion"],
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         this.setState({
           result: "false",
         });
       });
-  };
-
-  displayEmotion = () => {
-    if (this.state.emotion) {
-      return <h1>{this.state.emotion}</h1>;
-    } else {
-      return;
-    }
   };
 
   render() {
@@ -121,9 +113,10 @@ class Analyze extends Component {
         className="container row"
         style={{
           margin: "auto",
+          marginTop: "30px",
         }}
       >
-        <div className="col-6" style={{ marginTop: "30px" }}>
+        <div className="col-6">
           <label htmlFor="analyzeImage">Upload an Image</label>
           <br />
           <input
@@ -147,7 +140,9 @@ class Analyze extends Component {
           {this.fileData()}
           {this.analyzedData()}
         </div>
-        <div className="col-6">{this.displayEmotion()}</div>
+        <div className="col-6">
+          <SongSuggestion emotion={this.state.emotion} />
+        </div>
       </div>
     );
   }
