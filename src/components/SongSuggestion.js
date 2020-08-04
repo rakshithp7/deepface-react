@@ -3,16 +3,18 @@ var SpotifyWebApi = require("spotify-web-api-node");
 
 const SongSuggestion = (props) => {
   const [playlists, updatePlaylists] = useState([]);
+  const [tracks, updateTracks] = useState([]);
+
+  var spotifyApi = new SpotifyWebApi();
+
+  spotifyApi.setAccessToken(process.env.ACCESS_TOKEN);
 
   async function connectToSpotify() {
     const { emotion } = props;
-    var spotifyApi = new SpotifyWebApi();
-
-    spotifyApi.setAccessToken(process.env.ACCESS_TOKEN);
 
     await spotifyApi.searchPlaylists(emotion).then(
       function (data) {
-        var randomIndex = Math.floor(Math.random() * 20);
+        var randomIndex = Math.floor(Math.random() * 19);
         const randomPlaylist = data.body.playlists.items[randomIndex];
 
         updatePlaylists(randomPlaylist || []);
@@ -21,6 +23,19 @@ const SongSuggestion = (props) => {
         console.log(err);
       }
     );
+  }
+
+  async function loadPlaylistTracks(id) {
+    await spotifyApi.getPlaylistTracks(id).then(
+      function (data) {
+        updateTracks(data.body.items);
+      },
+      function (err) {
+        console.log(err);
+      }
+    );
+
+    console.log(tracks);
   }
 
   return (
@@ -57,6 +72,13 @@ const SongSuggestion = (props) => {
               >
                 Open in Spotify
               </a>
+              <br />
+              <button
+                className="btn btn-secondary"
+                onClick={() => loadPlaylistTracks(playlists.id)}
+              >
+                ConsoleLog songs
+              </button>
             </div>
           ) : (
             ""
